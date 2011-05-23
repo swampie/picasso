@@ -1,2 +1,2 @@
 var picasso =require('../lib/picasso');
-picasso.init({}).paint();
+picasso.init({}).skills();

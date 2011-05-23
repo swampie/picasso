@@ -10,6 +10,6 @@ exports.conf =function(){
     });
 }
 
-exports.exec = function{
+exports.exec = function(){
     console.log("executing module" + this.conf().name);
 }
