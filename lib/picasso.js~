@@ -1,0 +1,50 @@
+exports = module.exports = Picasso;
+var fs = require('fs')
+
+
+var picasso = Picasso.prototype;
+
+function Picasso(args){
+	this.ready = false;
+	this.debugOn = true;
+	this.modules = {};
+	this.configure(args);
+}
+picasso.configure = function(args){
+	var self = this;
+	//load modules
+	fs.readdirSync('./modules').forEach(function(file) {
+		var modname = file.substring(0, file.lastIndexOf("."));
+		var extension = "."+file.substring(file.lastIndexOf(".")+1);
+		if(extension!='js'){
+		    self.debug("ignoring "+modname + extension);
+		}else{
+		    console.log("installing " + modname);
+		}
+  });
+    
+	
+	
+	
+	
+}
+
+picasso.debug = function(str){
+    if(this.debugOn){
+	console.log("[DEBUG]>"+str);
+    }
+}
+
+exports.init = function(args){
+    return new Picasso(args);
+}
+
+picasso.paint = function(args){
+     console.log("Picasso is painting");
+}
+
+picasso.fail = function(reason,args){
+	throw new Error(">>"+reason);
+}
+
+
