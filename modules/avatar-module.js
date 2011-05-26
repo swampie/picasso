@@ -1,7 +1,7 @@
 exports = module.exports = AvatarModule;
 var Step = require('step');
 var path = require('path');
-var im = require('imagemagick');
+var ImageMagick = require('../lib/commons-im');
 function AvatarModule(){}
 
 exports.conf =function(){
@@ -28,31 +28,20 @@ exports.exec = function(args){
         },
 	function converting(){
 	    self.conf().suffixes.forEach(
-		function(it){
-			console.log("converting to "+it.suffix);
-			im.convert([args.input,
-				   "-colorspace",
-				   "RGB",
-				   "-type",
-				   "TrueColor",
-				   "-identify",
-				   "-strip",
-                                   "-resize",
-                                   it.width/2,
-				   "-resize",
-				   it.width/2+"x<",
-				   "-resize",
-				   "50%",
-                                   "-gravity",
-                                   "center",
-                                   "-crop",it.width+"x"+it.height+"+0+0",
-                                   destination+"/"+it.suffix+"_"+path.basename(args.input,path.extname(args.input)+".png")],function(err,stdout,stderr){
-				if(err){
-					console.log(err);	
-				}else{
-					console.log(stdout);
-				}
-			})
+			function(it){
+				console.log("converting to "+it.suffix);
+				console.log(ImageMagick);
+				var im = new ImageMagick(args.input)
+					.colorspace("RGB")
+					.withType("TrueColor")
+					.identify()
+					.strip()
+					.addResize(it.width/2)
+					.addResize(it.width/2+"x<")
+					.addResize('50%')
+					.withGravity('center')
+					.crop(it.width+"x"+it.height+"+0+0")
+					.dumpCommand();
 		});
 	}
 	
