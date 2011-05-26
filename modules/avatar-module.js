@@ -30,20 +30,30 @@ exports.exec = function(args){
 	    self.conf().suffixes.forEach(
 			function(it){
 				console.log("converting to "+it.suffix);
-				console.log(ImageMagick);
 				var im = new ImageMagick(args.input)
 					.colorspace("RGB")
 					.withType("TrueColor")
 					.identify()
 					.strip()
-					.addResize(it.width/2)
+					.addResize(it.width/2+"x")
 					.addResize(it.width/2+"x<")
 					.addResize('50%')
 					.withGravity('center')
 					.crop(it.width+"x"+it.height+"+0+0")
-					.dumpCommand();
-		});
-	}
-	
-    );
+					.dumpCommand()
+					.toFile(destination+'/'+it.suffix+"-"+path.basename(args.input,path.extname(args.input))+'.png',
+					function(stdout,stderr,err){
+						if(err){
+							throw(err);
+						}
+						if(stderr && stderr.length > 0){
+							console.log(stderr);
+							throw new Error('error en la conversion');
+						}
+						console.log('done');
+					});
+					
+			});
+		}
+		);
 }
